@@ -1,0 +1,58 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Concurrency: only one deploy at a time, but don't cancel an in-flight run.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+# Minimum permissions needed for the Pages deploy action.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # The build step. NEXT_PUBLIC_BASE_PATH is inlined at build time so all
+      # `next/image`, `next/link`, and our `withBase()` helper resolve to the
+      # `/my_bio` subpath when deployed to https://<user>.github.io/my_bio/.
+      - name: Build
+        run: pnpm build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /my_bio
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

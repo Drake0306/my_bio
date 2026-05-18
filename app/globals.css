@@ -1,0 +1,168 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  /* Accordion expand/collapse */
+  --animate-accordion-down: accordion-down 0.22s ease-out;
+  --animate-accordion-up: accordion-up 0.22s ease-out;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-edge: var(--edge);
+  --color-card: var(--card);
+  --color-accent: var(--accent);
+  --color-info: var(--info);
+  --font-sans: var(--font-plex-sans), "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+  /* These two are what Tailwind v4 preflight applies to <html> and to
+     `code/pre/kbd/samp` by default. Without overriding them, those elements
+     fall back to system fonts instead of inheriting IBM Plex Sans / Geist Mono. */
+  --default-font-family: var(--font-plex-sans), "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --default-mono-font-family: var(--font-geist-mono), "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #09090b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717b;
+  --border: #e4e4e7;
+  --edge: rgba(0, 0, 0, 0.1);
+  --card: #ffffff;
+  --accent: #f4f4f5;
+  --info: #3080ff;
+}
+
+.dark {
+  --background: #09090b;
+  --foreground: #fafafa;
+  --muted: #27272a;
+  --muted-foreground: #9f9fa9;
+  --border: #27272a;
+  --edge: rgba(255, 255, 255, 0.1);
+  --card: #18181b;
+  --accent: #27272a;
+  --info: #60a5fa;
+}
+
+html,
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "ss01", "cv01";
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+/* Anything explicitly mono uses Geist Mono */
+code,
+kbd,
+samp,
+pre,
+[class*="font-mono"] {
+  font-family: var(--font-mono);
+}
+
+::selection {
+  background: #fde68a;
+  color: #18181b;
+}
+.dark ::selection {
+  background: #fbbf24;
+  color: #18181b;
+}
+
+/* ───────────────────────────────────────────────────────────
+   Reference-site design utilities
+   ─────────────────────────────────────────────────────────── */
+
+/* Screen-spanning 1px lines: extend 200vw across the viewport
+   so the rule continues beyond the centered container edges. */
+.screen-line-before {
+  position: relative;
+}
+.screen-line-before::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100vw;
+  width: 200vw;
+  height: 1px;
+  background-color: var(--edge);
+  z-index: -1;
+}
+.screen-line-after {
+  position: relative;
+}
+.screen-line-after::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -100vw;
+  width: 200vw;
+  height: 1px;
+  background-color: var(--edge);
+  z-index: -1;
+}
+
+/* Diagonal hatched stripe (used between sections) */
+.bg-stripes {
+  background-image: repeating-linear-gradient(
+    315deg,
+    var(--edge) 0,
+    var(--edge) 1px,
+    transparent 0,
+    transparent 50%
+  );
+  background-size: 10px 10px;
+}
+
+/* Radial dot grid (used in cover banner) */
+.bg-dots {
+  background-image: radial-gradient(var(--edge) 1px, transparent 0);
+  background-size: 10px 10px;
+}
+
+/* Radix Accordion expand/collapse keyframes */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+/* Subtle scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
