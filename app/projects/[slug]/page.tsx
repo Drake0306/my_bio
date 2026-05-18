@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
@@ -145,12 +144,13 @@ export default async function ProjectPage({
                     key={src}
                     className="relative aspect-[16/10] bg-card"
                   >
-                    <Image
-                      src={src}
+                    {/* Raw <img> so withBase() actually prefixes the path. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={withBase(src)}
                       alt={`${project.name} screenshot ${i + 1}`}
-                      fill
-                      sizes="(min-width: 640px) 50vw, 100vw"
-                      className="object-contain"
+                      loading="lazy"
+                      className="absolute inset-0 h-full w-full object-contain"
                     />
                   </div>
                 ))}

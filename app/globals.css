@@ -133,6 +133,43 @@ pre,
   background-size: 10px 10px;
 }
 
+/* CSS marquee — pure CSS, SSR-safe, no JS dependency. The track contains the
+   items twice; sliding -50% wraps seamlessly. */
+@keyframes marquee-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes marquee-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+.marquee-left {
+  animation: marquee-left var(--marquee-duration, 60s) linear infinite;
+}
+.marquee-right {
+  animation: marquee-right var(--marquee-duration, 60s) linear infinite;
+}
+.marquee-wrap:hover .marquee-track {
+  animation-play-state: paused;
+}
+.marquee-wrap {
+  mask-image: linear-gradient(90deg, transparent, black 5%, black 95%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 5%, black 95%, transparent);
+}
+
 /* Radix Accordion expand/collapse keyframes */
 @keyframes accordion-down {
   from {
